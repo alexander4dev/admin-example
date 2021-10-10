@@ -1,0 +1,311 @@
+easy_admin:
+    design:
+        assets:
+            css:
+            js:
+    list:
+        actions:
+            - show
+    formats:
+        time: 'H:i'
+        dateinterval: 'Дни: %d Часы: %H Минуты: %i'
+    entities:
+        Supplier:
+            class: App\Entity\Supplier
+            label: 'Поставщики'
+            list:
+                title: '%%entity_label%%'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'name', 'label': 'Имя' }
+            show:
+                title: '%%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'name', 'label': 'Имя' }
+                    - { property: 'workingSchedule', 'label': 'График работы' }
+                    - { property: 'workingExtraDays', 'label': 'Дополнительный график работы' }
+                    - { property: 'deliverySchedule', 'label': 'График приёма заказов' }
+                    - { property: 'deliveryExtraOutgoing', 'label': 'Дополнительный график приёма заказов' }
+                    - { property: 'deliveryExtraIncoming', 'label': 'Дополнительный график приёма поставок' }
+            form:
+                fields:
+                    - { property: 'name', 'label': 'Имя' }
+            new:
+                title: '%%entity_label%%'
+            edit:
+                title: '%%entity_label%% (#%%entity_id%%)'
+            templates:
+                show: 'admin/supplier_show.html.twig'
+        Branch:
+            class: App\Entity\Branch
+            label: 'Филиалы'
+            list:
+                title: '%%entity_label%%'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'name', 'label': 'Имя' }
+                    - { property: 'warehouse', 'label': 'Склад' }
+            show:
+                title: '%%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'name', 'label': 'Имя' }
+                    - { property: 'warehouse', 'label': 'Склад' }
+                    - { property: 'workingSchedule', 'label': 'График работы' }
+                    - { property: 'workingExtraDays', 'label': 'Дополнительный график работы' }
+                    - { property: 'sectors', 'label': 'Сектора' }
+            form:
+                fields:
+                    - { property: 'name' }
+            new:
+                title: '%%entity_label%%'
+            edit:
+                title: '%%entity_label%% (#%%entity_id%%)'
+        Warehouse:
+            class: App\Entity\Warehouse
+            label: 'Склады'
+            list:
+                title: '%%entity_label%%'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'name', 'label': 'Имя' }
+                    - { property: 'branch', 'label': 'Филиал' }
+            show:
+                title: '%%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'name', 'label': 'Имя' }
+                    - { property: 'branch', 'label': 'Филиал' }
+                    - { property: 'workingSchedule', 'label': 'График работы' }
+                    - { property: 'workingExtraDays', 'label': 'Дополнительный график работы' }
+                    - { property: 'deliverySchedule', 'label': 'График доставок поставщиков' }
+                    - { property: 'deliveryDepartures', 'label': 'График отправлений' }
+                    - { property: 'deliveryExtraOutgoing', 'label': 'Дополнительные отправления' }
+                    - { property: 'deliveryArrivals', 'label': 'График прибытий' }
+                    - { property: 'deliveryExtraIncoming', 'label': 'Дополнительные прибытия' }
+                    - { property: 'deliverySectorDepartures', 'label': 'График отправлений в сектор' }
+            form:
+                fields:
+                    - { property: 'name', 'label': 'Имя' }
+                    - { property: 'branch', 'label': 'Филиал', type_options: { required: true } }
+            new:
+                title: '%%entity_label%%'
+            edit:
+                title: '%%entity_label%% (#%%entity_id%%)'
+            templates:
+                show: 'admin/supplier_show.html.twig'
+        Sector:
+            class: App\Entity\Sector
+            label: 'Сектора'
+            list:
+                title: '%%entity_label%%'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'name', 'label': 'Имя' }
+                    - { property: 'branch', 'label': 'Филиал' }
+            show:
+                title: '%%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'name', 'label': 'Имя' }
+                    - { property: 'branch', 'label': 'Филиал' }
+                    - { property: 'deliveryArrivals', 'label': 'График прибытий' }
+            form:
+                fields:
+                    - { property: 'name', 'label': 'Имя' }
+                    - { property: 'branch', 'label': 'Филиал', type_options: { required: true } }
+            new:
+                title: '%%entity_label%%'
+            edit:
+                title: '%%entity_label%% (#%%entity_id%%)'
+        WorkingSchedule:
+            class: App\Entity\WorkingSchedule
+            label: 'График работы'
+            list:
+                title: '%%entity_label%%'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'working_place', 'label': 'Место работы' }
+                    - { property: 'day', 'label': 'День недели' }
+                    - { property: 'time_from', 'label': 'Начало работы' }
+                    - { property: 'time_to', 'label': 'Конец работы' }
+            show:
+                title: '%%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'working_place', 'label': 'Место работы' }
+                    - { property: 'day', 'label': 'День недели' }
+                    - { property: 'time_from', 'label': 'Начало работы' }
+                    - { property: 'time_to', 'label': 'Конец работы' }
+            form:
+                fields:
+                    - { property: 'working_place', 'label': 'Место работы', type_options: { required: true } }
+                    - { property: 'day_number', 'label': 'Номер дня недели' }
+                    - { property: 'time_from', 'label': 'Начало работы' }
+                    - { property: 'time_to', 'label': 'Конец работы' }
+            new:
+                title: '%%entity_label%%'
+            edit:
+                title: '%%entity_label%% (#%%entity_id%%)'
+        WorkingExtraDay:
+            class: App\Entity\WorkingExtraDay
+            label: 'Дополнительные рабочие дни'
+            list:
+                title: '%%entity_label%%'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'working_place', 'label': 'Место работы' }
+                    - { property: 'date', 'label': 'Дата' }
+                    - { property: 'is_working', 'label': 'Рабочий день',  type: 'boolean' }
+                    - { property: 'time_from', 'label': 'Начало работы' }
+                    - { property: 'time_to', 'label': 'Конец работы' }
+            show:
+                title: '%%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'working_place', 'label': 'Место работы' }
+                    - { property: 'date', 'label': 'Дата' }
+                    - { property: 'is_working', 'label': 'Рабочий день' }
+                    - { property: 'time_from', 'label': 'Начало работы' }
+                    - { property: 'time_to', 'label': 'Конец работы' }
+            form:
+                fields:
+                    - { property: 'working_place', 'label': 'Место работы', type_options: { required: true } }
+                    - { property: 'date', 'label': 'Дата' }
+                    - { property: 'is_working', 'label': 'Рабочий день' }
+                    - { property: 'time_from', 'label': 'Начало работы' }
+                    - { property: 'time_to', 'label': 'Конец работы' }
+            new:
+                title: '%%entity_label%%'
+            edit:
+                title: '%%entity_label%% (#%%entity_id%%)'
+        SupplierDeliverySchedule:
+            class: App\Entity\SupplierDeliverySchedule
+            label: 'График доставок поставщиков'
+            list:
+                title: '%%entity_label%%'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'supplier', 'label': 'Поставщик' }
+                    - { property: 'warehouse', 'label': 'Склад' }
+                    - { property: 'day', 'label': 'День недели' }
+                    - { property: 'order_time', 'label': 'Время заказа' }
+                    - { property: 'delivery_time_amount', 'label': 'Время доставки' }
+            show:
+                title: '%%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'supplier', 'label': 'Поставщик' }
+                    - { property: 'warehouse', 'label': 'Склад' }
+                    - { property: 'day', 'label': 'День недели' }
+                    - { property: 'order_time', 'label': 'Время заказа' }
+                    - { property: 'delivery_time_amount', 'label': 'Время доставки' }
+            form:
+                fields:
+                    - { property: 'supplier', 'label': 'Поставщик', type_options: { required: true } }
+                    - { property: 'warehouse', 'label': 'Склад', type_options: { required: true } }
+                    - { property: 'day_number', 'label': 'Номер дня недели' }
+                    - { property: 'order_time', 'label': 'Время заказа' }
+                    - { property: 'delivery_time_amount', 'label': 'Время доставки', type: 'date_interval',
+                        type_options: {
+                            with_years: false, with_months: false, with_days: true, with_hours: true, with_minutes: true
+                        }
+                      }
+            new:
+                title: '%%entity_label%%'
+            edit:
+                title: '%%entity_label%% (#%%entity_id%%)'
+        SupplierDeliveryExtra:
+            class: App\Entity\SupplierDeliveryExtra
+            label: 'Дополнительные поставки'
+            list:
+                title: '%%entity_label%%'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'supplier_from', 'label': 'Поставщик' }
+                    - { property: 'supplier_to', 'label': 'Склад' }
+                    - { property: 'order_date', 'label': 'Дата заказа' }
+                    - { property: 'order_time', 'label': 'Время заказа' }
+                    - { property: 'is_supply', 'label': 'Поставка будет осуществлена',  type: 'boolean' }
+                    - { property: 'delivery_date', 'label': 'Дата поставки' }
+            show:
+                title: '%%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'supplier_from', 'label': 'Поставщик' }
+                    - { property: 'supplier_to', 'label': 'Склад' }
+                    - { property: 'order_date', 'label': 'Дата заказа' }
+                    - { property: 'order_time', 'label': 'Время заказа' }
+                    - { property: 'is_supply', 'label': 'Поставка будет осуществлена',  type: 'boolean' }
+                    - { property: 'delivery_date', 'label': 'Дата поставки' }
+            form:
+                fields:
+                    - { property: 'supplier_from', 'label': 'Поставщик', type_options: { required: true } }
+                    - { property: 'supplier_to', 'label': 'Склад', type_options: { required: true } }
+                    - { property: 'order_date', 'label': 'Дата заказа' }
+                    - { property: 'order_time', 'label': 'Время заказа' }
+                    - { property: 'is_supply', 'label': 'Поставка будет осуществлена' }
+                    - { property: 'delivery_date', 'label': 'Дата поставки' }
+            new:
+                title: '%%entity_label%%'
+            edit:
+                title: '%%entity_label%% (#%%entity_id%%)'
+        DeliveryRouteSheet:
+            class: App\Entity\DeliveryRouteSheet
+            label: 'Маршрутный лист доставок'
+            list:
+                title: '%%entity_label%%'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'warehouse_from', 'label': 'Склад отправления' }
+                    - { property: 'warehouse_to', 'label': 'Склад прибытия' }
+                    - { property: 'time_departure', 'label': 'Время отправления' }
+                    - { property: 'time_arrival', 'label': 'Время прибытия' }
+            show:
+                title: '%%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'warehouse_from', 'label': 'Склад отправления'  }
+                    - { property: 'warehouse_to', 'label': 'Склад прибытия' }
+                    - { property: 'time_departure', 'label': 'Время отправления' }
+                    - { property: 'time_arrival', 'label': 'Время прибытия' }
+            form:
+                fields:
+                    - { property: 'warehouse_from', 'label': 'Склад отправления' , type_options: { required: true } }
+                    - { property: 'warehouse_to', 'label': 'Склад прибытия', type_options: { required: true } }
+                    - { property: 'time_departure', 'label': 'Время отправления' }
+                    - { property: 'time_arrival', 'label': 'Время прибытия' }
+            new:
+                title: '%%entity_label%%'
+            edit:
+                title: '%%entity_label%% (#%%entity_id%%)'
+        DeliverySectorRouteSheet:
+            class: App\Entity\DeliverySectorRouteSheet
+            label: 'Маршрутный лист доставок в сектора'
+            list:
+                title: '%%entity_label%%'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'warehouse', 'label': 'Склад' }
+                    - { property: 'sector', 'label': 'Сектор' }
+                    - { property: 'time_departure', 'label': 'Время отправления' }
+                    - { property: 'time_arrival', 'label': 'Время прибытия' }
+            show:
+                title: '%%entity_label%% (#%%entity_id%%)'
+                fields:
+                    - { property: 'id' }
+                    - { property: 'warehouse', 'label': 'Склад'  }
+                    - { property: 'sector', 'label': 'Сектор' }
+                    - { property: 'time_departure', 'label': 'Время отправления' }
+                    - { property: 'time_arrival', 'label': 'Время прибытия' }
+            form:
+                fields:
+                    - { property: 'warehouse', 'label': 'Склад' , type_options: { required: true } }
+                    - { property: 'sector', 'label': 'Сектор', type_options: { required: true } }
+                    - { property: 'time_departure', 'label': 'Время отправления' }
+                    - { property: 'time_arrival', 'label': 'Время прибытия' }
+            new:
+                title: '%%entity_label%%'
+            edit:
+                title: '%%entity_label%% (#%%entity_id%%)'

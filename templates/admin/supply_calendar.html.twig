@@ -1,0 +1,54 @@
+{% for arrivalName, arrivalDeliveries in deliveries %}
+    <div class="form-group field-association">
+        <label class="control-label">{{ arrivalName }}</label>
+        <div class="form-widget">
+            <table style="width: 130%;">
+                <th>Дата заказа</th>
+                <th>Дата поставки</th>
+                {% for delivery in arrivalDeliveries.deliveries %}
+                    <tr>
+                        <td style="padding: 5px;">
+                            {% if false == delivery.is_success %}
+                                <s>{{ delivery.departure_date }} {{ delivery.departure_time }}</s>
+                            {% else %}
+                                {{ delivery.departure_date }} {{ delivery.departure_time }}
+                            {% endif %}
+                        </td>
+                        <td style="padding: 5px;">
+                            {% if false == delivery.arrival_date %}
+                                Поставка отменена
+                            {% elseif false == delivery.is_success %}
+                                {% if false == delivery.departure_is_working %}
+                                    У пункта отправления нерабочий день
+                                {% endif %}
+
+                                {% if false == delivery.arrival_is_working %}
+                                    {% if false == delivery.departure_is_working %}
+                                        <br>
+                                    {% endif %}
+                                    У пункта прибытия нерабочий день
+                                {% endif %}
+                            {% else %}
+                                {{ delivery.arrival_date }}
+                            {% endif %}
+                        </td>
+                        <td style="padding: 5px;">
+                            {% if delivery.is_extra_overrided %}
+                                <a href="javascript:void(0);" data-id="{{ delivery.extra_id }}" class="cancelDeliveryExtra">Отменить редактирование</a>
+                            {% elseif delivery.is_extra %}
+                                <a href="javascript:void(0);" data-id="{{ delivery.extra_id }}" class="deleteDeliveryExtra">Удалить дополнительную поставку</a>
+                            {% else %}
+                                <a href="javascript:void(0);" data-destination-id="{{ arrivalDeliveries.destination_id }}" data-delivery-date="{{ delivery.departure_date }} {{ delivery.departure_time }}" class="cancelDelivery">Отменить поставку</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endfor %}
+
+<script type="text/javascript">
+    $(function() {
+    });
+</script>

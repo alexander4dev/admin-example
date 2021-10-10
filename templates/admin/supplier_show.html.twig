@@ -1,0 +1,104 @@
+{% extends '@EasyAdmin/default/show.html.twig' %}
+
+{% block show_fields %}
+    {{ parent() }}
+    <div class="form-group field-association">
+        <label class="control-label">
+        </label>
+        <div class="form-widget">
+            <fieldset style="width: 135%;">
+                <div class="form-group field-association">
+                    <label class="control-label">
+                        Календарь поставок
+                    </label>
+                    <div class="form-widget">
+                        <input type="date" id="dateFrom" class="calendarRange form-control" value="{{ "now"|date('Y-m-d') }}">
+                        <input type="date" id="dateTo" class="calendarRange form-control" value="{{ "now"|date('Y-m-d') }}">
+                    </div>
+                </div>
+                <div id="supplyCalendar"></div>
+            </fieldset>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(function() {
+            $(document).on('change', '.calendarRange', function() {
+                loadCalendar();
+            });
+
+            $(document).on('click', '.cancelDelivery', function() {
+                if (!confirm('Отменить поставку?')) {
+                    return;
+                }
+
+                $.ajax({
+                    url: '/cancelDelivery',
+                    data: {
+                        entityId: {{ _entity_id }},
+                        entity: '{{ _entity_config.name }}',
+                        date: $(this).data('delivery-date'),
+                        destinationId: $(this).data('destination-id')
+                    },
+                    success: function(response) {
+                        loadCalendar();
+                    }
+                });
+            });
+
+            $(document).on('click', '.cancelDeliveryExtra', function() {
+                if (!confirm('Отменить редактирование?')) {
+                    return;
+                }
+
+                $.ajax({
+                    url: '/cancelDeliveryExtra',
+                    data: {
+                        entityId: $(this).data('id')
+                    },
+                    success: function(response) {
+                        loadCalendar();
+                    }
+                });
+            });
+
+            $(document).on('click', '.deleteDeliveryExtra', function() {
+                if (!confirm('Удалить дополнительную поставку?')) {
+                    return;
+                }
+
+                $.ajax({
+                    url: '/cancelDeliveryExtra',
+                    data: {
+                        entityId: $(this).data('id')
+                    },
+                    success: function(response) {
+                        loadCalendar();
+                    }
+                });
+            });
+
+            loadCalendar();
+        });
+
+        function loadCalendar() {
+            $.ajax({
+                url: '/calendar',
+                data: {
+                    entityId: {{ _entity_id }},
+                    entity: '{{ _entity_config.name }}',
+                    dateFrom: $('#dateFrom').val(),
+                    dateTo: $('#dateTo').val()
+                },
+                success: function(response) {
+                    $('#supplyCalendar').html(response);
+                }
+            });
+        }
+    </script>
+{% endblock %}

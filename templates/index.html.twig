@@ -1,0 +1,139 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <form id="form">
+                <div class="form-group">
+                    <label for="orderCreatingMinutes">Время на формирование заказа в системе (минуты)</label>
+                    <input type="text" id="orderCreatingMinutes" name="orderCreatingMinutes" value="{{ orderCreatingMinutes }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryAcceptingMinutes">Время на приемку доставки на складе (минуты)</label>
+                    <input type="text" id="deliveryAcceptingMinutes" name="deliveryAcceptingMinutes" value="{{ deliveryAcceptingMinutes }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="originId">Пункт отправления</label>
+                    <select id="originId" name="originId" class="form-control">
+                      {% for id, name in origins %}
+                          <option value="{{ id }}" {{ originId == id ? 'selected="selected"' : '' }}>{{ name }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="destinationId">Пункт прибытия</label>
+                    <select name="destinationId" class="form-control">
+                      {% for id, name in destinations %}
+                          <option value="{{ id }}" {{ destinationId == id ? 'selected="selected"' : '' }}>{{ name }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="receiveMethod">Способ получения</label>
+                    <select name="receiveMethod" class="form-control">
+                        <option value="pickup" {{ receiveMethod == 'pickup' ? 'selected="selected"' : '' }}>Самовывоз</option>
+                        <option value="delivery" {{ receiveMethod == 'delivery' ? 'selected="selected"' : '' }}>Доставка</option>
+                    </select>
+                </div>
+                {% if receiveMethod == 'delivery' %}
+                    <div class="form-group">
+                        <label for="sectorId">Сектор</label>
+                        <select name="sectorId" class="form-control">
+                            {% for id, name in sectors %}
+                                <option value="{{ id }}" {{ sectorId == id ? 'selected="selected"' : '' }}>{{ name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <label for="orderDate">Дата заказа</label>
+                    <div class="input-group date" id="orderDate">
+                        <input type="text" name="orderDate" class="form-control" value="{{ orderDate }}">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                {% if receiveMethod == 'delivery' %}
+                    <div class="form-group">
+                        <label for="deliveryDate">Дата доставки</label>
+                        <div class="input-group date" id="deliveryDate">
+                            <input type="text" name="deliveryDate" class="form-control" value="{{ deliveryDate }}">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                {% endif %}
+                <p class="text-info">
+                    Ближайшая дата самовывоза <span class="label label-info">{{ deliveryInfo.closestDeliveryDate }}</span>, при заказе до <span class="label label-info">{{ deliveryInfo.closestOrderDeadline }}</span>
+                </p>
+                <div class="form-group">
+                    <button id="submitFrom" type="button" class="btn btn-default">Рассчитать дату доставки</button>
+                </div>
+            </form>
+
+            {% if orderDate %}
+                {% if receiveMethod == 'pickup' %}
+                    <p class="text-success">
+                        Итоговая дата доставки <span class="label label-success">{{ deliveryInfo.deliveryDate }}</span>
+                    </p>
+                {% else %}
+                    {% if sectorArrivals %}
+                        <p class="text-success">
+                            Возможное время доставки: {% for sectorArrival in sectorArrivals %}<span class="label label-success">{{ sectorArrival }}</span> {% endfor %}
+                        </p>
+                    {% else %}
+                        <p class="text-danger">
+                            Для выбранной даты доставка невозможна
+                        </p>
+                    {% endif %}
+                {% endif %}
+                {% for pointId, route in deliveryInfo.info %}
+                    <p>
+                        {{ route.departurePointName }}<br>
+                        {% if pointId == originId %}
+                            <span class="badge">Формирование заказа {{ deliveryInfo.orderDate }}</span><br>
+                        {% else %}
+                            <span class="badge">Прибытие {{ route.arrivalDate }}</span><br>
+                            <span class="badge">Приёмка {{ route.acceptedDate }}</span><br>
+                        {% endif %}
+                        {% if destinationId != pointId %}
+                            <span class="badge">Отправление {{ route.departureDate }}</span><br>
+                            <div>
+                                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                            </div>
+                        {% elseif receiveMethod == 'pickup' %}
+                            <br>{{ deliveryInfo.deliveryPointName }}<br>
+                            <span class="badge">Выдача {{ deliveryInfo.deliveryDate }}</span><br>
+                        {% endif %}
+                    </p>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script>
+    $(function() {
+        $(document).on('change', 'input, select', function() {
+            $('#form').submit();
+        });
+
+        $(document).on('click', '#submitFrom', function() {
+            $('#form').submit();
+        });
+
+        $('#orderDate').datetimepicker({
+            locale: 'ru',
+            allowInputToggle: true
+        });
+
+        $('#deliveryDate').datetimepicker({
+            format: 'DD.MM.YYYY',
+            locale: 'ru',
+            allowInputToggle: true
+        });
+    });
+</script>
+{% endblock %}
